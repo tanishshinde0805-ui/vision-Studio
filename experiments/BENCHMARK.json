@@ -1,0 +1,13 @@
+{
+  "device": "12-Core Intel/AMD CPU (12 threads)",
+  "cuda_available": false,
+  "elapsed_seconds": 41.1,
+  "epochs": 5,
+  "images_processed": 320,
+  "images_per_second": 7.79,
+  "batch_size": 8,
+  "vram_peak_mb": 0,
+  "est_sec_per_1000_images": 128.44,
+  "est_20_epoch_trashcan_min": 171.3,
+  "est_50_epoch_trashcan_min": 428.1
+}

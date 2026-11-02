@@ -1,0 +1,21 @@
+# Backend requirements
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+pydantic>=2.9.0
+sqlalchemy>=2.0.36
+aiosqlite>=0.20.0
+aiofiles>=24.1.0
+python-multipart>=0.0.20
+httpx>=0.28.0
+pillow>=10.0.0
+numpy>=1.26.0
+pytest>=7.0.0
+pyyaml>=6.0
+
+# ML & Export requirements
+ultralytics>=8.3.0
+onnx>=1.15.0
+onnxruntime>=1.17.0
+imagehash>=4.3.1
+scipy>=1.11.0
+matplotlib>=3.8.0

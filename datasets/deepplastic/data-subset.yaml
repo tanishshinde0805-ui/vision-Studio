@@ -1,0 +1,11 @@
+{
+  "path": "D:/CV-Project/vision-studio-final/datasets/deepplastic/subset",
+  "train": "images/train",
+  "val": "images/val",
+  "names": [
+    "trash_plastic"
+  ],
+  "local_to_global": [
+    40
+  ]
+}

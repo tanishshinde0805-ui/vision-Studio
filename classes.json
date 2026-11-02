@@ -1,0 +1,312 @@
+{
+  "total_classes": 43,
+  "classes": [
+    {
+      "id": 0,
+      "name": "trash",
+      "source": [
+        "Underwater-Trash-Detection-main",
+        "DeepTrash"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "bio",
+      "source": [
+        "Underwater-Trash-Detection-main"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "rov",
+      "source": [
+        "Underwater-Trash-Detection-main",
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "shipwreck",
+      "source": [
+        "MarianaTech-main",
+        "MarineGuard-main"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "submarine_pipeline",
+      "source": [
+        "MarianaTech-main",
+        "MarineGuard-main"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "cylinder",
+      "source": [
+        "MarianaTech-main"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "ghost_net",
+      "source": [
+        "MarianaTech-main",
+        "MarineGuard-main"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "crab_pot",
+      "source": [
+        "MarianaTech-main"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "unidentified_object",
+      "source": [
+        "MarianaTech-main"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "marine_life_cluster",
+      "source": [
+        "MarianaTech-main"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "debris_field",
+      "source": [
+        "MarianaTech-main"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "geological_formation",
+      "source": [
+        "MarianaTech-main"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "pipeline_damage",
+      "source": [
+        "MarianaTech-main"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "mine_like_contact",
+      "source": [
+        "MarianaTech-main"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "plant",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "animal_fish",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "animal_starfish",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 17,
+      "name": "animal_shells",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 18,
+      "name": "animal_crab",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 19,
+      "name": "animal_eel",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 20,
+      "name": "animal_etc",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 21,
+      "name": "trash_clothing",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 22,
+      "name": "trash_pipe",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 23,
+      "name": "trash_bottle",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 24,
+      "name": "trash_bag",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 25,
+      "name": "trash_snack_wrapper",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 26,
+      "name": "trash_can",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 27,
+      "name": "trash_cup",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 28,
+      "name": "trash_container",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 29,
+      "name": "trash_unknown_instance",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 30,
+      "name": "trash_branch",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 31,
+      "name": "trash_wreckage",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 32,
+      "name": "trash_tarp",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 33,
+      "name": "trash_rope",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 34,
+      "name": "trash_net",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 35,
+      "name": "trash_etc",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 36,
+      "name": "trash_fabric",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 37,
+      "name": "trash_fishing_gear",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 38,
+      "name": "trash_metal",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 39,
+      "name": "trash_paper",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 40,
+      "name": "trash_plastic",
+      "source": [
+        "TrashCan",
+        "DeepTrash"
+      ]
+    },
+    {
+      "id": 41,
+      "name": "trash_rubber",
+      "source": [
+        "TrashCan"
+      ]
+    },
+    {
+      "id": 42,
+      "name": "trash_wood",
+      "source": [
+        "TrashCan"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+# Python
+.tmp/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# Node & Frontend
+node_modules/
+web/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
+
+# Datasets raw media and partitions (reconstructed via ml scripts per REPRODUCE.md)
+datasets/**/images/
+datasets/**/labels/
+datasets/**/labels_seg/
+datasets/**/subset/
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/

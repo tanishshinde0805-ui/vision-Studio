@@ -1,0 +1,544 @@
+openapi: 3.0.3
+info:
+  title: Vision-Studio Underwater & Sonar AI Platform API
+  version: 2.0.0
+  description: >
+    Unified API contract for vision-stack underwater debris and sonar anomaly detection.
+    Conforms all tiers (Web, API, AI-Service) to a standardized detection schema
+    backed by unified classes in classes.json.
+
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Local API Gateway
+  - url: http://localhost:8000
+    description: Direct AI Service
+
+paths:
+  /detect:
+    post:
+      summary: Detect marine debris and sonar anomalies
+      description: Validates and forwards image to AI-Service, returns detections conforming to unified classes.json.
+      operationId: detectImage
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Underwater or side-scan sonar image (.png, .jpg, .jpeg, .tiff, .bmp)
+                model:
+                  type: string
+                  description: Model name identifier from /models registry (defaults to default available model or fake)
+                  default: yolo11n-seg
+                confidence_threshold:
+                  type: number
+                  format: float
+                  minimum: 0.0
+                  maximum: 1.0
+                  default: 0.25
+                latitude:
+                  type: number
+                  format: float
+                  description: Optional sensor or image latitude
+                longitude:
+                  type: number
+                  format: float
+                  description: Optional sensor or image longitude
+      responses:
+        '200':
+          description: Detection successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '400':
+          description: Bad request (invalid parameter or format)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '415':
+          description: Unsupported media type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Corrupted or unprocessable image
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: AI Service or requested model unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /history:
+    get:
+      summary: List detection history
+      description: Returns saved detection records filtered by class and date range.
+      operationId: getHistory
+      parameters:
+        - name: class_name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter by unified class name
+        - name: start_date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: YYYY-MM-DD
+        - name: end_date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: YYYY-MM-DD
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: History retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+
+  /history/{id}:
+    get:
+      summary: Get detection record by ID
+      operationId: getHistoryItem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Record found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '404':
+          description: Record not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /stats:
+    get:
+      summary: Detection counts and metrics dashboard statistics
+      operationId: getStats
+      responses:
+        '200':
+          description: Statistics aggregated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+
+  /classes:
+    get:
+      summary: Retrieve unified taxonomy classes
+      operationId: getClasses
+      responses:
+        '200':
+          description: Unified classes list from classes.json
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+
+  /models:
+    get:
+      summary: List models registry and weights availability
+      operationId: getModels
+      responses:
+        '200':
+          description: Registered models list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+
+  /health:
+    get:
+      summary: Service health check
+      operationId: getHealth
+      responses:
+        '200':
+          description: System online
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+
+  /analyses/{id}/trace:
+    get:
+      summary: Retrieve pipeline execution trace
+      description: Returns multi-stage execution telemetry including durations and summaries
+      operationId: getAnalysisTrace
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Trace retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+        '404':
+          description: Analysis not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /demo/load:
+    post:
+      summary: Populate synthetic demo records
+      description: Injects synthetic acoustic analyses tagged source=demo (only active when DEMO_MODE=true)
+      operationId: loadDemoData
+      responses:
+        '200':
+          description: Demo records populated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+
+  /demo/clear:
+    delete:
+      summary: Purge synthetic demo records
+      description: Removes all synthetic records tagged demo=true from the history database
+      operationId: clearDemoData
+      responses:
+        '200':
+          description: Demo records cleared
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+
+  /models/{model_name}/self-test:
+    post:
+      summary: Execute model self-test
+      description: Runs a dry-run inference on model weights or synthetic baseline
+      operationId: modelSelfTest
+      parameters:
+        - name: model_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Self-test completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardResponse'
+
+  /analyses/export:
+    get:
+      summary: Export analysis records
+      description: Streams history in CSV or JSON format
+      operationId: exportAnalyses
+      parameters:
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [csv, json]
+            default: csv
+        - name: include_demo
+          in: query
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Export stream
+
+  /infer:
+    post:
+      summary: Direct AI Service inference endpoint
+      operationId: inferAI
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                model:
+                  type: string
+                  default: fake
+                confidence_threshold:
+                  type: number
+                  format: float
+                  default: 0.25
+                latitude:
+                  type: number
+                  format: float
+                longitude:
+                  type: number
+                  format: float
+      responses:
+        '200':
+          description: Inference output
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetectionResult'
+        '503':
+          description: Model weights missing and demo mode disabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    PixelBbox:
+      type: object
+      required:
+        - x
+        - y
+        - w
+        - h
+      properties:
+        x:
+          type: number
+          description: Top-left X coordinate in pixels
+        y:
+          type: number
+          description: Top-left Y coordinate in pixels
+        w:
+          type: number
+          description: Bounding box width in pixels
+        h:
+          type: number
+          description: Bounding box height in pixels
+
+    GeoLocation:
+      type: object
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+
+    Detection:
+      type: object
+      required:
+        - class_id
+        - class_name
+        - confidence
+        - bbox
+      properties:
+        class_id:
+          type: integer
+          description: Global ID matching classes.json
+        class_name:
+          type: string
+          description: Global class name matching classes.json
+        confidence:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+        bbox:
+          $ref: '#/components/schemas/PixelBbox'
+        polygon:
+          type: array
+          description: Optional polygon vertices [[x1, y1], [x2, y2], ...]
+          items:
+            type: array
+            items:
+              type: number
+            minItems: 2
+            maxItems: 2
+        geo:
+          $ref: '#/components/schemas/GeoLocation'
+
+    ImageSize:
+      type: object
+      required:
+        - width
+        - height
+      properties:
+        width:
+          type: integer
+        height:
+          type: integer
+
+    Timings:
+      type: object
+      required:
+        - preprocess_ms
+        - inference_ms
+        - postprocess_ms
+        - total_ms
+      properties:
+        preprocess_ms:
+          type: number
+          format: float
+        inference_ms:
+          type: number
+          format: float
+        postprocess_ms:
+          type: number
+          format: float
+        total_ms:
+          type: number
+          format: float
+
+    DetectionResult:
+      type: object
+      required:
+        - model
+        - demo
+        - image_size
+        - detections
+        - timings
+      properties:
+        id:
+          type: string
+          description: Unique analysis/detection record id
+        filename:
+          type: string
+        model:
+          type: string
+          description: Name of the model executed
+        demo:
+          type: boolean
+          description: True if executed via fake detector or DEMO_MODE
+        image_size:
+          $ref: '#/components/schemas/ImageSize'
+        detections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Detection'
+        timings:
+          $ref: '#/components/schemas/Timings'
+        created_at:
+          type: string
+          format: date-time
+
+    ModelRegistryItem:
+      type: object
+      required:
+        - name
+        - framework
+        - available
+        - weights_path
+      properties:
+        name:
+          type: string
+        framework:
+          type: string
+        available:
+          type: boolean
+        weights_path:
+          type: string
+          nullable: true
+        description:
+          type: string
+
+    ClassTaxonomyItem:
+      type: object
+      required:
+        - id
+        - name
+        - source
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        source:
+          type: array
+          items:
+            type: string
+
+    StandardResponse:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          nullable: true
+        error:
+          type: object
+          nullable: true
+
+    ErrorDetails:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: string
+          nullable: true
+
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          default: false
+        error:
+          $ref: '#/components/schemas/ErrorDetails'
