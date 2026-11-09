@@ -29,6 +29,15 @@ class Timings(BaseModel):
     postprocess_ms: float
     total_ms: float
 
+class GateResult(BaseModel):
+    """Domain gate classification result."""
+    decision: str = "underwater"  # "underwater" or "non_underwater"
+    score: float = 1.0           # underwater probability [0, 1]
+    threshold: float = 0.65
+    latency_ms: float = 0.0
+    model: str = "mobilenetv3-small"
+    available: bool = True
+
 class DetectionResult(BaseModel):
     id: Optional[str] = None
     filename: Optional[str] = None
@@ -37,6 +46,7 @@ class DetectionResult(BaseModel):
     image_size: ImageSize
     detections: List[Detection]
     timings: Timings
+    gate: Optional[GateResult] = None
     created_at: Optional[str] = None
 
 class ModelRegistryItem(BaseModel):

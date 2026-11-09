@@ -3,7 +3,8 @@ import {
   PipelineTrace,
   SystemHealth,
   AnalysesStats,
-  ModelRegistryItem
+  ModelRegistryItem,
+  PipelineConfig
 } from './types';
 
 const API_BASE = '/api/v1';
@@ -71,6 +72,8 @@ export const api = {
     }),
 
   getModels: () => request<ModelRegistryItem[]>('/models'),
+
+  getPipelineConfig: () => request<PipelineConfig>('/pipeline/config'),
 
   getClasses: () => request<{ id: number; name: string }[]>('/classes'),
 

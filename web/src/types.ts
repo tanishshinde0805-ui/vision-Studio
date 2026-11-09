@@ -32,6 +32,15 @@ export interface ImageSize {
   height: number;
 }
 
+export interface GateResult {
+  decision: 'underwater' | 'non_underwater';
+  score: number;
+  threshold: number;
+  latency_ms: number;
+  model: string;
+  available: boolean;
+}
+
 export interface AnalysisRecord {
   id: string;
   dataset_id?: string;
@@ -52,6 +61,7 @@ export interface AnalysisRecord {
   operator?: string;
   sonar_type?: string;
   timings: Timings;
+  gate?: GateResult | null;
   detections: Detection[];
   anomalies?: Detection[];
   created_at: string;
@@ -99,4 +109,35 @@ export interface AnalysesStats {
   high_count: number;
   models_used: Record<string, number>;
   classes_distribution: Record<string, number>;
+}
+
+export interface PipelineStageConfig {
+  stage: number;
+  name: string;
+  latency_ms: number;
+}
+
+export interface PipelineItem {
+  id: string;
+  name: string;
+  gate: string;
+  detector: string;
+  description: string;
+  latency_estimate_ms: number;
+  stages: PipelineStageConfig[];
+}
+
+export interface PipelineConfig {
+  pipeline_version: string;
+  domain_gate: {
+    model: string;
+    format: string;
+    weights_path: string;
+    weights_size_mb: number;
+    classes: string[];
+    default_threshold: number;
+    avg_latency_ms: number;
+    rejection_policy: string;
+  };
+  pipelines: PipelineItem[];
 }

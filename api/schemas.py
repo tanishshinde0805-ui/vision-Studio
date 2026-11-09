@@ -29,6 +29,14 @@ class Timings(BaseModel):
     postprocess_ms: float = 0.0
     total_ms: float = 0.0
 
+class GateResult(BaseModel):
+    decision: str = "underwater"
+    score: float = 1.0
+    threshold: float = 0.65
+    latency_ms: float = 0.0
+    model: str = "mobilenetv3-small"
+    available: bool = True
+
 class DetectionResult(BaseModel):
     id: Optional[str] = None
     filename: Optional[str] = None
@@ -37,6 +45,7 @@ class DetectionResult(BaseModel):
     image_size: ImageSize
     detections: List[Detection] = []
     timings: Timings
+    gate: Optional[GateResult] = None
     created_at: Optional[str] = None
 
 class ModelRegistryItem(BaseModel):

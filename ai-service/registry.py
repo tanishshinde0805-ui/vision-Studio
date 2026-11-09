@@ -34,6 +34,34 @@ UNIFIED_CLASSES = load_unified_classes()
 # Registry Definition
 # Each model specifies its name, framework, optional weights path, and native-to-global mapping
 DEFAULT_REGISTRY: Dict[str, Dict[str, Any]] = {
+    "pipeline-trashcan": {
+        "name": "pipeline-trashcan",
+        "framework": "cascade",
+        "description": "Multi-Model Cascade: MobileNetV3 Domain Gate + YOLO11n TrashCan (22 classes)",
+        "env_var": "MODEL_YOLO11N_TRASHCAN_WEIGHTS",
+        "default_weights": "models/finalist_trashcan_yolo11n.pt",
+        "native_to_global": {
+            0: 2, 1: 14, 2: 15, 3: 16, 4: 17, 5: 18, 6: 19, 7: 20,
+            8: 21, 9: 22, 10: 23, 11: 24, 12: 25, 13: 26, 14: 27,
+            15: 28, 16: 29, 17: 30, 18: 31, 19: 32, 20: 33, 21: 34
+        }
+    },
+    "pipeline-deepplastic": {
+        "name": "pipeline-deepplastic",
+        "framework": "cascade",
+        "description": "Multi-Model Cascade: MobileNetV3 Domain Gate + YOLO11n DeepPlastic (Oceanic Debris)",
+        "env_var": "MODEL_YOLO11N_DEEPPLASTIC_WEIGHTS",
+        "default_weights": "models/finalist_deepplastic_yolo11n.pt",
+        "native_to_global": {0: 40}
+    },
+    "domain-gate": {
+        "name": "domain-gate",
+        "framework": "onnx",
+        "description": "MobileNetV3 Domain Gate: Underwater vs Non-Underwater binary classifier",
+        "env_var": "DOMAIN_GATE_WEIGHTS",
+        "default_weights": "models/domain_gate_mobilenetv3.onnx",
+        "native_to_global": {}
+    },
     "yolo11n-trashcan": {
         "name": "yolo11n-trashcan",
         "framework": "ultralytics",

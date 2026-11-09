@@ -116,24 +116,38 @@ async def fetch_models() -> List[Dict[str, Any]]:
     # Fallback registry if AI service is not yet ready
     return [
         {
+            "name": "pipeline-trashcan",
+            "framework": "cascade",
+            "available": True,
+            "weights_path": "models/finalist_trashcan_yolo11n.onnx",
+            "description": "Multi-Model Cascade: MobileNetV3 Domain Gate + YOLO11n TrashCan (22 classes)"
+        },
+        {
+            "name": "pipeline-deepplastic",
+            "framework": "cascade",
+            "available": True,
+            "weights_path": "models/finalist_deepplastic_yolo11n.onnx",
+            "description": "Multi-Model Cascade: MobileNetV3 Domain Gate + YOLO11n DeepPlastic"
+        },
+        {
+            "name": "yolo11n-trashcan",
+            "framework": "ultralytics",
+            "available": True,
+            "weights_path": "models/finalist_trashcan_yolo11n.onnx",
+            "description": "YOLO11n trained on 22 TrashCan classes"
+        },
+        {
+            "name": "yolo11n-deepplastic",
+            "framework": "ultralytics",
+            "available": True,
+            "weights_path": "models/finalist_deepplastic_yolo11n.onnx",
+            "description": "YOLO11n trained on oceanic plastic debris"
+        },
+        {
             "name": "fake",
             "framework": "synthetic",
             "available": True,
             "weights_path": None,
             "description": "Deterministic fake detector for test suites and UI development"
-        },
-        {
-            "name": "yolo11n-seg",
-            "framework": "ultralytics",
-            "available": False,
-            "weights_path": None,
-            "description": "Ultralytics YOLO11n-Seg underwater anomaly detection"
-        },
-        {
-            "name": "yolov8n",
-            "framework": "ultralytics",
-            "available": False,
-            "weights_path": None,
-            "description": "YOLOv8 Nano underwater debris detector"
         }
     ]

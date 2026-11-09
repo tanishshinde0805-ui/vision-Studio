@@ -22,6 +22,17 @@ export const ModelLab: React.FC = () => {
   // Candidate models overview
   const models = [
     {
+      id: 'domain-gate',
+      name: 'MobileNetV3 Domain Gate',
+      dataset: 'Underwater + Terrestrial Controls',
+      classes: 2,
+      map50: '100% Acc',
+      map50_95: '0.000 FP',
+      cpu_ms: '3.43 ms',
+      status: 'Active Domain Filter (ONNX)',
+      badgeColor: 'var(--accent-cyan)'
+    },
+    {
       id: 'yolo11n-trashcan',
       name: 'YOLO11n TrashCan Finalist',
       dataset: 'TrashCan Instance 1.0 (Leakage-Free)',

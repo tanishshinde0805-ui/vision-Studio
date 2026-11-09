@@ -1,3 +1,4 @@
+import os
 import time
 import math
 import io
@@ -12,7 +13,8 @@ from schemas import (
     GeoLocation,
     ImageSize,
     Timings,
-    DetectionResult
+    DetectionResult,
+    GateResult
 )
 from registry import registry, UNIFIED_CLASSES, DEFAULT_REGISTRY
 
@@ -165,6 +167,39 @@ def run_pipeline(
     w, h = pil_img.size
     is_demo = registry.is_demo_mode() or (model_name == "fake")
 
+    # Domain Gate Execution: Reject non-underwater images before YOLO detection
+    gate_result_obj = None
+    if model_name.startswith("pipeline-") or model_name == "domain-gate" or os.environ.get("ENABLE_DOMAIN_GATE", "0") in ("1", "true", "yes"):
+        from domain_gate import classify_domain, is_gate_available
+        gate_threshold = float(os.environ.get("DOMAIN_GATE_THRESHOLD", "0.65"))
+        gate_decision, gate_score, gate_lat = classify_domain(pil_img, threshold=gate_threshold)
+        gate_result_obj = GateResult(
+            decision=gate_decision,
+            score=round(gate_score, 4),
+            threshold=gate_threshold,
+            latency_ms=round(gate_lat, 2),
+            model="mobilenetv3-small",
+            available=is_gate_available()
+        )
+        # If non-underwater or standalone domain gate, return immediately with 0 detections
+        if gate_decision == "non_underwater" or model_name == "domain-gate":
+            timings = Timings(
+                preprocess_ms=round(gate_lat * 0.3, 2),
+                inference_ms=round(gate_lat * 0.7, 2),
+                postprocess_ms=0.0,
+                total_ms=round(gate_lat, 2)
+            )
+            return DetectionResult(
+                id=f"DET-{uuid.uuid4().hex[:8].upper()}",
+                filename=filename,
+                model=model_name,
+                demo=False,
+                image_size=ImageSize(width=w, height=h),
+                detections=[],  # Zero false positives on non-underwater images
+                timings=timings,
+                gate=gate_result_obj
+            )
+
     # Check model registration
     model_info = registry.get_model_info(model_name)
     if not model_info:
@@ -191,7 +226,8 @@ def run_pipeline(
             demo=True,
             image_size=ImageSize(width=w, height=h),
             detections=detections,
-            timings=timings
+            timings=timings,
+            gate=gate_result_obj
         )
 
     # Real model execution on CPU
@@ -267,7 +303,8 @@ def run_pipeline(
             demo=False,
             image_size=ImageSize(width=w, height=h),
             detections=detections,
-            timings=timings
+            timings=timings,
+            gate=gate_result_obj
         )
     except Exception as exc:
         # If execution fails, fallback to error
